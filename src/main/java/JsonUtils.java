@@ -26,8 +26,7 @@ public class JsonUtils {
                 JSONArray connectionArray = new JSONArray();
                 station.getConnections().forEach(s -> {
                     JSONObject o = new JSONObject();
-                    o.put("line", s.getLine().getNumber());
-                    o.put("name", s.getName());
+                    o.put(s.getLine().getNumber(), s.getName());
                     connectionArray.add(o);
                 });
                 stationObject.put("connections", connectionArray);
@@ -69,9 +68,36 @@ public class JsonUtils {
             String lineNumber = (String) lineNumberObject;
             Line line = Line.getLine(lineNumber);
             JSONArray stationsArray = (JSONArray) stations.get(lineNumberObject);
-            stationsArray.forEach(stationObject -> {
-                Station station = new Station((String) stationObject, line);
-            });
+            for (Object stationObject : stationsArray){
+                JSONObject stationObjectJson = (JSONObject) stationObject;
+                JSONArray stationArray = (JSONArray) stationObjectJson.get("connections");
+                Station station = Station.getStationToAdd((String) stationObjectJson.get("name"), line);
+                if(!station.getLine().getStations().contains(station))
+                    station.getLine().getStations().add(station);
+                stationArray.forEach(connection -> {
+                    JSONObject connectionJson = (JSONObject) connection;
+                    connectionJson.keySet().forEach(key -> {
+                        String lineNum = (String) key;
+                        String stationName = (String) connectionJson.get(lineNum);
+                        station.getConnections().add(Station.getStationWithoutAdd(stationName, Line.getLine(lineNum)));
+                    });
+                });
+            }
+//            stationsArray.forEach(stationObject -> {
+//                JSONObject stationObjectJson = (JSONObject) stationObject;
+//                JSONArray stationArray = (JSONArray) stationObjectJson.get("connections");
+//                stationArray.forEach(connection -> {
+//                    JSONObject connectionJson = (JSONObject) connection;
+//                    connectionJson.keySet().forEach(key -> {
+//                        String lineNum = (String) key;
+//                        String stationName = (String) connectionJson.get(lineNum);
+//                        Station.getStationToAdd(stationName, Line.getLine(lineNum));
+//                    });
+//                });
+//                Station station = Station.getStationToAdd((String) stationObjectJson.get("name"), line);
+//                station.getConnections().add(i, station);
+//                i += 1;
+//            });
         });
     }
 

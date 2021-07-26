@@ -33,7 +33,6 @@ public class WikiParser {
             Line line = Line.getLine(element.selectFirst("tr > td:nth-child(1) > span:nth-child(1)").text(),
                     element.selectFirst("tr > td:nth-child(1) > span:nth-child(2)[title]").attr("title"));
             Station station = new Station(element.selectFirst("tr > td:nth-child(2)").text(), line);
-            Element elementStation = element.selectFirst("tr > td:nth-child(2)");
             stations.add(station);
             Element value = element.selectFirst("tr > td:nth-child(4)");
             ArrayList<String> tos = new ArrayList<>();

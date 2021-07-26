@@ -14,16 +14,16 @@ public class Main{
 
     public static void main(String[] args) throws IOException, ParseException {
         File jsonFile = new File(PATH_TO_JSON);
-//        if(!jsonFile.exists()) {
+        if(!jsonFile.exists()) {
             WikiParser.parseWiki();
             String json = JsonUtils.toJson();
             jsonFile.createNewFile();
             Files.write(jsonFile.toPath(), Collections.singleton(json));
-//        }
-//        else{
-//            JsonUtils.loadJson(Paths.get(PATH_TO_JSON));
-//        }
-//        Line.print();
+        }
+        else{
+            JsonUtils.loadJson(Paths.get(PATH_TO_JSON));
+        }
+        Line.print();
     }
 
 
